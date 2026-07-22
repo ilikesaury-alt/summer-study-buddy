@@ -34,8 +34,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="container flex-1 py-6 pb-28">{children}</main>
 
       {/* 底部导航 */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t-2 border-white/60 bg-paper/90 backdrop-blur-md">
-        <div className="container flex items-stretch justify-around py-2">
+      <nav className="fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2 border-t-2 border-white/60 bg-paper/90 backdrop-blur-md">
+        <div className="flex items-stretch justify-around py-2">
           {NAV.map((item) => {
             const active = location.pathname === item.to ||
               (item.to !== "/" && location.pathname.startsWith(item.to));

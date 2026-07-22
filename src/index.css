@@ -49,6 +49,17 @@ body::before {
   z-index: 1;
 }
 
+/* 大屏(平板宽度以上)把应用限制成居中窄画框,体验更接近平板/手机 */
+@media (min-width: 481px) {
+  #root {
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 0 32px rgba(45, 64, 89, 0.12);
+    border-left: 1px solid rgba(45, 64, 89, 0.08);
+    border-right: 1px solid rgba(45, 64, 89, 0.08);
+  }
+}
+
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
   width: 10px;
