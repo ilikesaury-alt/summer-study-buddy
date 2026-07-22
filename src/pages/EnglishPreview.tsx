@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useStudyStore } from "@/store/useStudyStore";
 import { ENGLISH_WORDS } from "@/data/previewData";
 import PageHeader from "@/components/PageHeader";
 import StarBurst from "@/components/StarBurst";
+import SpeakButton from "@/components/SpeakButton";
 import { cn } from "@/lib/utils";
+
+// 从句子中提取英文部分(去掉中文和标点)
+function extractEnglish(text: string): string {
+  if (!text) return "";
+  const matches = text.match(/[a-zA-Z][a-zA-Z' ]*[a-zA-Z]|[a-zA-Z]/g);
+  return matches ? matches.join(" ").trim() : "";
+}
 
 export default function EnglishPreview() {
   const progress = useStudyStore((s) => s.previewProgress);
@@ -18,16 +26,6 @@ export default function EnglishPreview() {
   const word = ENGLISH_WORDS[idx];
   const done = progress[`english-${word.id}`];
   const doneCount = ENGLISH_WORDS.filter((w) => progress[`english-${w.id}`]).length;
-
-  const speak = (text: string) => {
-    if ("speechSynthesis" in window) {
-      speechSynthesis.cancel(); // 避免连续点击叠加多个语音
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "en-US";
-      u.rate = 0.8;
-      speechSynthesis.speak(u);
-    }
-  };
 
   const handleMark = () => {
     if (!done) {
@@ -50,6 +48,9 @@ export default function EnglishPreview() {
       setFlipped(false);
     }
   };
+
+  // 例句中的英文部分(去掉中文翻译)
+  const sentenceEnglish = extractEnglish(word.sentence);
 
   return (
     <div className="relative mx-auto max-w-md">
@@ -101,13 +102,11 @@ export default function EnglishPreview() {
               style={{ backfaceVisibility: "hidden" }}
             >
               <span className="mb-3 text-8xl">{word.emoji}</span>
-              <p className="font-cute text-4xl text-ink">{word.word}</p>
-              <button
-                onClick={() => speak(word.word)}
-                className="mt-3 flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-sm text-sky2-500"
-              >
-                <Volume2 size={15} /> 跟读
-              </button>
+              <div className="flex items-center gap-2">
+                <p className="font-cute text-4xl text-ink">{word.word}</p>
+                <SpeakButton text={word.word} size="md" variant="pill" />
+              </div>
+              <SpeakButton text={word.word} size="md" variant="solid" label="跟读" className="mt-3" />
               <p className="mt-3 text-xs text-ink/40">点击卡片查看中文</p>
             </div>
 
@@ -116,15 +115,18 @@ export default function EnglishPreview() {
               className="absolute inset-0 flex flex-col items-center justify-center rounded-blob border-2 border-white bg-gradient-to-br from-sun-100 to-coral-100 p-6 shadow-sticker"
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             >
-              <p className="font-cute text-4xl text-ink">{word.meaning}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-cute text-4xl text-ink">{word.meaning}</p>
+                <SpeakButton text={word.word} size="md" variant="pill" />
+              </div>
               <div className="mt-4 rounded-2xl bg-white/70 p-3 text-center">
-                <p className="text-sm text-ink/80">{word.sentence}</p>
-                <button
-                  onClick={() => speak(word.sentence)}
-                  className="mt-2 flex items-center gap-1 text-xs text-sky2-500"
-                >
-                  <Volume2 size={13} /> 听句子
-                </button>
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-sm text-ink/80">{word.sentence}</p>
+                  {sentenceEnglish && (
+                    <SpeakButton text={sentenceEnglish} size="sm" variant="ghost" />
+                  )}
+                </div>
+                <SpeakButton text={sentenceEnglish || word.word} size="sm" variant="solid" label="听句子" className="mt-2" />
               </div>
             </div>
           </motion.div>

@@ -7,6 +7,14 @@ import { SUBJECT_INFO, SUBJECT_CLASSES } from "@/data/badges";
 import { cn } from "@/lib/utils";
 import PageHeader from "@/components/PageHeader";
 import EmptyHint from "@/components/EmptyHint";
+import SpeakButton from "@/components/SpeakButton";
+
+// 提取文本中的英文片段用于发音
+function extractEnglish(text: string): string {
+  if (!text) return "";
+  const matches = text.match(/[a-zA-Z][a-zA-Z' ]*[a-zA-Z]|[a-zA-Z]/g);
+  return matches ? matches.join(" ").trim() : "";
+}
 
 export default function WrongBook() {
   const wrongs = useStudyStore((s) => s.wrongQuestions);
@@ -76,7 +84,12 @@ export default function WrongBook() {
                       )}
                     </div>
 
-                    <p className="mb-3 font-cute text-lg text-ink">{w.stem}</p>
+                    <p className="mb-3 font-cute text-lg text-ink">
+                      {w.stem}
+                      {w.subject === "english" && extractEnglish(w.stem) && (
+                        <SpeakButton text={extractEnglish(w.stem)} size="sm" variant="ghost" className="ml-1 inline-flex align-middle" />
+                      )}
+                    </p>
 
                     {w.options && (
                       <div className="mb-3 space-y-1.5">
@@ -84,12 +97,17 @@ export default function WrongBook() {
                           <div
                             key={i}
                             className={cn(
-                              "rounded-xl border-2 px-3 py-1.5 text-sm",
+                              "flex items-center gap-1 rounded-xl border-2 px-3 py-1.5 text-sm",
                               opt === w.answer ? "border-mint-300 bg-mint-50 text-mint-500" : "border-ink/10 bg-paper text-ink/70"
                             )}
                           >
-                            <span className="font-bold mr-1">{String.fromCharCode(65 + i)}.</span> {opt}
-                            {opt === w.answer && isRevealed && <Check size={14} className="ml-1 inline" />}
+                            <span className="flex-1">
+                              <span className="font-bold mr-1">{String.fromCharCode(65 + i)}.</span> {opt}
+                              {opt === w.answer && isRevealed && <Check size={14} className="ml-1 inline" />}
+                            </span>
+                            {w.subject === "english" && extractEnglish(opt) && (
+                              <SpeakButton text={extractEnglish(opt)} size="sm" variant="ghost" />
+                            )}
                           </div>
                         ))}
                       </div>
@@ -104,8 +122,18 @@ export default function WrongBook() {
                           className="overflow-hidden"
                         >
                           <div className="rounded-xl bg-mint-50 p-3 text-sm">
-                            <p className="text-mint-500"><span className="font-bold">正确答案:</span>{w.answer}</p>
-                            <p className="mt-1 text-ink/70"><span className="font-bold">解析:</span>{w.explanation}</p>
+                            <p className="text-mint-500">
+                              <span className="font-bold">正确答案:</span>{w.answer}
+                              {w.subject === "english" && extractEnglish(w.answer) && (
+                                <SpeakButton text={extractEnglish(w.answer)} size="sm" variant="ghost" className="ml-1 inline-flex align-middle" />
+                              )}
+                            </p>
+                            <p className="mt-1 text-ink/70">
+                              <span className="font-bold">解析:</span>{w.explanation}
+                              {w.subject === "english" && extractEnglish(w.explanation) && (
+                                <SpeakButton text={extractEnglish(w.explanation)} size="sm" variant="ghost" className="ml-1 inline-flex align-middle" />
+                              )}
+                            </p>
                           </div>
                         </motion.div>
                       )}

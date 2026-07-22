@@ -8,8 +8,17 @@ import { generateQuiz, isCorrect } from "@/utils/quizEngine";
 import { cn } from "@/lib/utils";
 import type { Question, Subject } from "@/types";
 import Confetti from "@/components/Confetti";
+import SpeakButton from "@/components/SpeakButton";
 
 const QUIZ_COUNT = 10;
+
+// 提取文本中的英文片段用于发音(支持单词和句子)
+function extractEnglish(text: string): string {
+  if (!text) return "";
+  // 匹配英文字母(含撇号)组成的片段,空格分隔的连续英文视为一个句子
+  const matches = text.match(/[a-zA-Z][a-zA-Z' ]*[a-zA-Z]|[a-zA-Z]/g);
+  return matches ? matches.join(" ").trim() : "";
+}
 
 export default function Quiz() {
   const { subject = "chinese" } = useParams<{ subject: Subject }>();
@@ -133,7 +142,12 @@ export default function Quiz() {
                       {ok ? <Check size={12} strokeWidth={4} /> : <X size={12} strokeWidth={4} />}
                     </span>
                     <div className="flex-1">
-                      <p className="text-ink">{qq.stem}</p>
+                      <p className="text-ink">
+                        {qq.stem}
+                        {subject === "english" && extractEnglish(qq.stem) && (
+                          <SpeakButton text={extractEnglish(qq.stem)} size="sm" variant="ghost" className="ml-1 inline-flex align-middle" />
+                        )}
+                      </p>
                       <p className="mt-1 text-xs">
                         你的答案:<span className={ok ? "text-mint-500" : "text-coral-400"}>{ua}</span>
                         {!ok && <span className="text-mint-500"> · 正确:{qq.answer}</span>}
@@ -207,7 +221,12 @@ export default function Quiz() {
             </span>
           </div>
 
-          <h2 className="mb-5 font-cute text-2xl leading-relaxed text-ink">{q.stem}</h2>
+          <div className="mb-5 flex items-start gap-2">
+            <h2 className="flex-1 font-cute text-2xl leading-relaxed text-ink">{q.stem}</h2>
+            {subject === "english" && extractEnglish(q.stem) && (
+              <SpeakButton text={extractEnglish(q.stem)} size="md" variant="solid" />
+            )}
+          </div>
 
           {/* 选择题 */}
           {q.type === "choice" && q.options && (
@@ -224,19 +243,32 @@ export default function Quiz() {
                   style = "border-sun-400 bg-sun-50";
                 }
                 return (
-                  <button
+                  <div
                     key={i}
-                    disabled={judged !== null}
-                    onClick={() => setCurrent(opt)}
                     className={cn("flex w-full items-center gap-3 rounded-2xl border-2 p-4 text-left transition-all", style)}
                   >
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white font-cute text-ink shadow-soft">
-                      {String.fromCharCode(65 + i)}
-                    </span>
-                    <span className="font-medium text-ink">{opt}</span>
-                    {judged !== null && isAns && <Check className="ml-auto text-mint-500" size={20} strokeWidth={3} />}
-                    {judged !== null && selected && !isAns && <X className="ml-auto text-coral-400" size={20} strokeWidth={3} />}
-                  </button>
+                    <button
+                      type="button"
+                      disabled={judged !== null}
+                      onClick={() => setCurrent(opt)}
+                      className="flex flex-1 items-center gap-3 text-left"
+                    >
+                      <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white font-cute text-ink shadow-soft">
+                        {String.fromCharCode(65 + i)}
+                      </span>
+                      <span className="font-medium text-ink">{opt}</span>
+                      {judged !== null && isAns && <Check className="ml-auto text-mint-500" size={20} strokeWidth={3} />}
+                      {judged !== null && selected && !isAns && <X className="ml-auto text-coral-400" size={20} strokeWidth={3} />}
+                    </button>
+                    {subject === "english" && extractEnglish(opt) && (
+                      <SpeakButton
+                        text={extractEnglish(opt)}
+                        size="sm"
+                        variant="ghost"
+                        className="flex-shrink-0"
+                      />
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -279,6 +311,9 @@ export default function Quiz() {
             >
               <p className="text-sm text-ink/80">
                 <span className="font-bold">{judged ? "✅ 答对啦!" : "💡 答错啦,"}</span> {q.explanation}
+                {subject === "english" && extractEnglish(q.explanation) && (
+                  <SpeakButton text={extractEnglish(q.explanation)} size="sm" variant="ghost" className="ml-1 inline-flex align-middle" />
+                )}
               </p>
             </motion.div>
           )}
