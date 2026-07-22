@@ -36,3 +36,9 @@ pnpm-debug.log*
 
 # Trae 临时文档(本地设计稿,不需要上传)
 .trae/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
