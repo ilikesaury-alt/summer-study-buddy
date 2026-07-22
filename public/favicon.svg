@@ -1,0 +1,46 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFC93C"/>
+      <stop offset="1" stop-color="#FF6B6B"/>
+    </linearGradient>
+    <linearGradient id="book" x1="160" y1="300" x2="352" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFF9F0"/>
+    </linearGradient>
+  </defs>
+  <!-- 背景:圆角方形渐变 -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- 太阳:左上 -->
+  <g transform="translate(168,150)">
+    <circle r="44" fill="#FFFFFF" opacity="0.95"/>
+    <g stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" opacity="0.85">
+      <line x1="0" y1="-68" x2="0" y2="-84"/>
+      <line x1="48" y1="-48" x2="60" y2="-60"/>
+      <line x1="68" y1="0" x2="84" y2="0"/>
+      <line x1="-48" y1="-48" x2="-60" y2="-60"/>
+      <line x1="-68" y1="0" x2="-84" y2="0"/>
+    </g>
+  </g>
+  <!-- 星星:右上 -->
+  <g transform="translate(344,140)">
+    <path d="M0 -30 L9 -9 L32 -9 L13 6 L20 28 L0 14 L-20 28 L-13 6 L-32 -9 L-9 -9 Z" fill="#FFE080" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+  <!-- 打开的书:下方居中 -->
+  <g transform="translate(256,360)">
+    <!-- 左页 -->
+    <path d="M-96 -56 Q-96 -64 -88 -64 L-8 -64 L-8 56 L-88 56 Q-96 56 -96 48 Z" fill="url(#book)" stroke="#E8D5B7" stroke-width="3"/>
+    <!-- 右页 -->
+    <path d="M96 -56 Q96 -64 88 -64 L8 -64 L8 56 L88 56 Q96 56 96 48 Z" fill="url(#book)" stroke="#E8D5B7" stroke-width="3"/>
+    <!-- 书脊中线 -->
+    <line x1="0" y1="-64" x2="0" y2="56" stroke="#E8D5B7" stroke-width="4" stroke-linecap="round"/>
+    <!-- 左页文字线 -->
+    <line x1="-78" y1="-32" x2="-18" y2="-32" stroke="#FFC93C" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="-78" y1="-12" x2="-24" y2="-12" stroke="#9BE564" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="-78" y1="8" x2="-20" y2="8" stroke="#5BC0EB" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <!-- 右页文字线 -->
+    <line x1="18" y1="-32" x2="78" y2="-32" stroke="#9BE564" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="24" y1="-12" x2="78" y2="-12" stroke="#FFC93C" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="20" y1="8" x2="78" y2="8" stroke="#5BC0EB" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+  </g>
+</svg>
